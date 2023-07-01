@@ -30,6 +30,7 @@ function App() {
   const [email, setEmail] = React.useState("");
 
   React.useEffect(() => {
+    if(loggedIn){
       Promise.all([api.getUserInfo(), api.getInitalCards()])
         .then(([userInfo, cards]) => {
           setCurrentUser(userInfo);
@@ -38,7 +39,8 @@ function App() {
         .catch((error) => {
           console.log(`Ошибка ${error}`);
         });
-  }, []);
+    }
+  }, [loggedIn]);
 
   const navigate = useNavigate();
 
@@ -174,7 +176,7 @@ function App() {
 
   useEffect(() => {
     handleTokenCheck();
-  }, [loggedIn]);
+  }, []);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
