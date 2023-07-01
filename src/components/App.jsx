@@ -24,20 +24,20 @@ function App() {
   const [selectedCard, setSelectedCard] = React.useState({});
   const [cards, setCards] = React.useState([]);
   const [currentUser, setCurrentUser] = React.useState({});
-  const [loggedIn, setLoggedIn] = React.useState(true);
+  const [loggedIn, setLoggedIn] = React.useState(false);
   const [isInfoTooltipOpen, setInfoTooltipOpen] = React.useState(false);
   const [isSuccess, setSuccess] = React.useState(false);
   const [email, setEmail] = React.useState("");
 
   React.useEffect(() => {
-    Promise.all([api.getUserInfo(), api.getInitalCards()])
-      .then(([userInfo, cards]) => {
-        setCurrentUser(userInfo);
-        setCards(cards);
-      })
-      .catch((error) => {
-        console.log(`Ошибка ${error}`);
-      });
+      Promise.all([api.getUserInfo(), api.getInitalCards()])
+        .then(([userInfo, cards]) => {
+          setCurrentUser(userInfo);
+          setCards(cards);
+        })
+        .catch((error) => {
+          console.log(`Ошибка ${error}`);
+        });
   }, []);
 
   const navigate = useNavigate();
@@ -156,6 +156,7 @@ function App() {
   function handleTokenCheck() {
     if (localStorage.getItem("token")) {
       const jwt = localStorage.getItem("token");
+      console.log(jwt);
       Auth.checkToken(jwt)
         .then((data) => {
           if (!data) {
@@ -163,7 +164,7 @@ function App() {
           }
           setLoggedIn(true);
           setEmail(data.data.email);
-          navigate("/");
+          navigate("/",{replace: true});
         })
         .catch(() => {
           setLoggedIn(false);
@@ -173,7 +174,7 @@ function App() {
 
   useEffect(() => {
     handleTokenCheck();
-  }, []);
+  }, [loggedIn]);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -201,12 +202,14 @@ function App() {
               path="/react-mesto-auth"
               element={
                 loggedIn ? (
-                  <Navigate to="/" />
+                  <Navigate to="/" replace/>
                 ) : (
                   <Navigate to="/sign-in" replace />
                 )
               }
             />
+
+            <Route path="*" element={<Navigate to="/sign-in" replace />} />
 
             <Route
               path="/"

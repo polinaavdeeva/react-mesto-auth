@@ -23,12 +23,12 @@ function Login({ handleLogin, setEmail }) {
     Auth.authorize(email, password)
       .then((data) => {
         localStorage.setItem("token", data.token);
-        navigate("/");
         setEmail(email);
         handleLogin();
+        navigate("/");
       })
       .catch((err) => {
-        console.log(err.status);
+        console.log(err);
       });
   }
 
