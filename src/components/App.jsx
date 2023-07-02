@@ -225,7 +225,7 @@ function App() {
                   onCardLike={handleCardLike}
                   onCardDelete={handleCardDelete}
                   cards={cards}
-                  loggedIn={handleLogin}
+                  loggedIn={loggedIn}
                 />
               }
             />
